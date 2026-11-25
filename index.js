@@ -24,7 +24,7 @@ const connectedClient = await connectToMongoDB();
 const database = connectedClient.db("mentorlagbe");
 const users = database.collection("user");
 const tuitions = database.collection("tuition");
-const application = database.collection("applications");
+const application = database.collection("application");
 
 
 //http://localhost:5000/ home route
@@ -54,6 +54,12 @@ app.get("/tutor/post-tuition", async (req, res) => {
 app.post("/student/application", async (req, res) => {
     const applicationsData = req.body;
     const result = await application.insertOne(applicationsData);
+    res.send(result)
+})
+//http://localhost:5000/student/application  for get-application route
+app.get("/student/application", async (req, res) => {
+    const cursor = application.find({});
+    const result = await cursor.toArray();
     res.send(result)
 })
 
