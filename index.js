@@ -42,6 +42,12 @@ app.post("/tutor/post-tuition", async (req, res) => {
     const result = await tuitions.insertOne(tuitionData);
     res.send(result)
 })
+//http://localhost:5000/tutor/post-tuition for get-tuition route
+app.get("/tutor/post-tuition", async (req, res) => {
+    const cursor = tuitions.find({});
+    const result = await cursor.toArray();
+    res.send(result)
+})
 
 app.listen(port, () => {
     console.log(`server stated successfully at: ${port}`);
