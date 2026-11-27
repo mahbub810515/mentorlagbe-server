@@ -37,31 +37,75 @@ app.get("/users", async (req, res) => {
     const result = await cursor.toArray()
     res.send(result)
 })
-//http://localhost:5000/tutor/post-tuition for post-tuition route
-app.post("/tutor/post-tuition", async (req, res) => {
+//http://localhost:5000/tutor/tuitions for post-tuition route
+app.post("/tutor/tuitions", async (req, res) => {
+  try {
     const tuitionData = req.body;
     const result = await tuitions.insertOne(tuitionData);
-    res.send(result)
-})
-//http://localhost:5000/tutor/post-tuition for get-tuition route
-app.get("/tutor/post-tuition", async (req, res) => {
-    const cursor = tuitions.find({});
-    const result = await cursor.toArray();
-    res.send(result)
-})
+    res.status(201).send({
+      success: true,
+      message: "Tuition posted successfully",
+      insertedId: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Error posting tuition:", error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to post tuition",
+    });
+  }
+});
+//http://localhost:5000/tutor/tuitions for get-tuition route
+app.get("/tutor/tuitions", async (req, res) => {
+  try {
+    const result = await tuitions.find({}).toArray();
+    res.status(200).send(result);
+  } catch (error) {
+    console.error("Error fetching tuitions:", error);
+    res.status(500).send({
+      message: "Failed to fetch tuition data",
+    });
+  }
+});
 
 //http://localhost:5000/student/application  for post-application route
 app.post("/student/application", async (req, res) => {
+  try {
     const applicationsData = req.body;
+
     const result = await application.insertOne(applicationsData);
-    res.send(result)
-})
+
+    res.status(201).send({
+      success: true,
+      message: "Application submitted successfully",
+      insertedId: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Error submitting application:", error);
+
+    res.status(500).send({
+      success: false,
+      message: "Failed to submit application",
+    });
+  }
+});
 //http://localhost:5000/student/application  for get-application route
 app.get("/student/application", async (req, res) => {
-    const cursor = application.find({});
-    const result = await cursor.toArray();
-    res.send(result)
-})
+  try {
+    const result = await application.find({}).toArray();
+    res.status(200).send({
+      success: true,
+      message: "Applications fetched successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to fetch applications",
+    });
+  }
+});
 
 app.listen(port, () => {
     console.log(`server stated successfully at: ${port}`);
